@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-from flaskweek_functions import authenticate
-from flaskweek_functions.forms import ExampleForms, UserLogin
+#from flaskweek_functions import authenticate
+#from flaskweek_functions.forms import ExampleForms, UserLogin
 
 from wtforms import Form, validators, StringField, PasswordField
 
@@ -108,7 +108,11 @@ def loginwtf():
         print(uid)
         print(pwd)
 
-        if uid == "antoo" and pwd == "1234":
+        user = db.collection(u"Users").where("uid", "==", uid).get()
+        if user != None:
+            user = user[0].todict()
+
+        if user.exists and user.id == uid and user.pwd == pwd :
             session["loggedin"] = True
             session["uid"] = uid
 
