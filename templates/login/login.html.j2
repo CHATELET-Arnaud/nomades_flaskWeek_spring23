@@ -1,18 +1,17 @@
 {% extends 'includes/base.html'%}
 {% block title%} Login {% endblock %}
 {% block content %}
-{% from "includes/_formsHelper.html" import showInput%}
+{% from "includes/_formsHelper.html" import showInput, activeNavLink%}
     <form method="POST" action="#">
         <table>
             {{ showInput(form.uid, class="form-control")}}
             {{ showInput(form.pwd, class="form-control")}}
-            {{ showInput(form.pwd2, class="form-control")}}
             <tr>
-               <td>
-                <input class="btn btn-primary" type="submit" value="Login" />
-                <input class="btn btn-primary" type="reset" value="Resets" />
+               <td colspan="2" style="text-align: center;">
+                    <input class="btn btn-primary" type="submit" value="Login" style="width: 100%;"/>
                </td>
             </tr>
         </table>
     </form>
+    {{ activeNavLink("#login-link") }}
 {% endblock %}

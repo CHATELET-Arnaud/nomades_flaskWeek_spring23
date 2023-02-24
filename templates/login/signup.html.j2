@@ -1,37 +1,22 @@
 {% extends 'includes/base.html'%}
 {% block title%} SignUp {% endblock %}
 {% block content %}
+{% from "includes/_formsHelper.html" import showInput, activeNavLink%}
     <form method="POST" action="#">
         <table>
+            {{ showInput(form.uid, class="form-control")}}
+            {{ showInput(form.pwd, class="form-control")}}
+            {{ showInput(form.pwd2, class="form-control")}}
+            {{ showInput(form.email, class="form-control")}}
+            {{ showInput(form.name, class="form-control")}}
+            {{ showInput(form.firstName, class="form-control")}}
+            {{ showInput(form.age, class="form-control")}}
             <tr>
-               <td>uid</td> 
-               <td>
-                  <input type="text" name="uid" />
-                </td> 
-            </tr>
-            <tr>
-               <td>pwd</td> 
-               <td>
-                  <input type="password" name="pwd" />
-                </td> 
-            </tr>
-            <tr>
-               <td>Name</td> 
-               <td>
-                  <input type="text" name="name" />
-                </td> 
-            </tr>
-            <tr>
-               <td>Mail</td> 
-               <td>
-                  <input type="text" name="mail" />
-                </td> 
-            </tr>
-            <tr>
-               <td>
-                <input type="submit" value="Sign Up" />
+               <td colspan="2" style="text-align: center;">
+                    <input class="btn btn-primary" type="submit" value="SignUp" style="width: 100%;"/>
                </td>
             </tr>
         </table>
     </form>
+    {{ activeNavLink("#signup-link") }}
 {% endblock %}

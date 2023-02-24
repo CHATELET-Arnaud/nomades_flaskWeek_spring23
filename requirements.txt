@@ -1,3 +1,4 @@
 flask
 WTForms
 firebase_Admin
+email_validator

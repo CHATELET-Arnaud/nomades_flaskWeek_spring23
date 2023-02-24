@@ -13,3 +13,12 @@
         </td> 
     </tr>
 {% endmacro %}
+
+{% macro activeNavLink(link) %}
+    <script>
+        document.querySelectorAll(".active").forEach(item => {
+            item.classList.remove("active")
+        })
+        document.querySelector("{{link}}").classList.add('active')
+    </script>
+{% endmacro %}
