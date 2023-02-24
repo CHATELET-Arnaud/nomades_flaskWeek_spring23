@@ -27,12 +27,23 @@
               </li>
               {% if not session["loggedin"] %}
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('login.loginwtf') }}"> Login </a>
+                  <a id="login-link" class="nav-link" href="{{ url_for('login.login') }}"> Login </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ url_for('login.signup') }}"> SignUp </a>
+                  <a id="signup-link" class="nav-link" href="{{ url_for('login.signup') }}"> SignUp </a>
                 </li>
               {% else %}
+                <li class="nav-item dropdown">
+                  <a id="posts-link" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Posts
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ url_for('posts.myposts')}}">my posts</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('posts.post')}}">post</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  </ul>
+                </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{{ url_for('login.logout') }}"> Logout </a>
                 </li>
@@ -42,8 +53,12 @@
         </div>
       </nav>
       <div class="container">
-        {%block content%}
-        {%endblock%}
+        <div class="row">
+          <div class="col-md-12">
+            {%block content%}
+            {%endblock%}
+          </div>
+        </div>
       </div>
       <footer>
         Copyright FlaskWeek 2023

@@ -1,0 +1,17 @@
+{%extends 'includes/base.html'%}
+
+{%block content%}
+<div>
+    <h1>Add your articles</h1>
+        {% from "includes/_formsHelper.html" import showInput %}
+        <form method="POST" action="">
+          <div class="form-group">
+            {{showInput(form.title, class_="form-control")}}
+          </div>
+          <div class="form-group">
+            {{showInput(form.body, class_="form-control", id="editor")}}  
+          <p><input type="submit" class="btn btn-primary" value="Submit"></p>
+        </form>
+    </div>
+
+{%endblock%}

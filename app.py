@@ -1,41 +1,23 @@
-from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flaskweek_functions import authenticate
-from flaskweek_functions.forms import ExampleForms, UserLogin, loginWTF
-
-from wtforms import Form, validators, StringField, PasswordField
-
+from flaskweek_functions.blueprint.posts import Myposts
+from flaskweek_functions.forms import ExampleForms
+from flaskweek_functions.blueprint.errorsHandler import MyErrors
 from flaskweek_functions.blueprint.login import MyLogin
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
 
-key = {
-  "type": "service_account",
-  "project_id": "flaskfevrier23",
-  "private_key_id": "a2ec14ba011e18b9c39a74ac171ccec07a37f50c",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCX7RpV6z2iIe7Z\nkqQEyvbU+18+A+GyAr51YgSMqDHTDPowo0wgPwaVVFgt+IZj1BRIT2NULtWs84rZ\no3AcJgM8k3ww1R9pcYOn5X1+ByynnUNMgZ/S3wjrUUiJFZORIGY3XdR7/98sJiZ0\nhvqOPXL5nY+391kpMUTIjjFSCJGtGyEpogfb00jaM6nVuflGMJgr39o5ufwKibv/\no7oE4Zt0vKBFl4hQJC3kMkUNezHL/c52GC8r+/gpHeeed2jAQfdDFufZuHJGkMd4\nFKJ+V3cdM18GHwSnUBrZ1kAOVw8kFbZKk6lGUvVRzw1XOH9OvyakBAsbignMaVEE\nch8jNjjTAgMBAAECggEAEDfLW+ikx63/pVI2GBzihJHg9OnNKgeI9VblTW6XAwSb\noJ2N/tM7jK1YTG//SKDXGXEAFXh6buAAroL38MlOByVnWH8nv0XS3BVvdAioB6yO\nBpi/yu7sMNKYf6nB+vgOcVKe4C3MURYxfLb8ADsnDuZ29Rh+eBs+UHp9YVhw1J2q\no+it0IMd31RistVn7jQLCCv8jAZT4E31E4wYLlOMWkoMOKKQEwgF8lIeTAhGfwl4\nG/ja2MwgruQdDSxWji5DpXvotpxS4HpA3VYPnBHPBq4muZ55XmHVyw6l8z1QOWuL\n7iDNWzObO2TGxuVrowB/BbHI+rdxXDk5YGkwSF/ugQKBgQDNyLpKPi2DGRNG27Y3\nLHlB3oQVQyPW3WsLNWsB9RiFvA6/VIP6av0JzG2pQuM8Yu6Iu9zRCV3RHKn6JE0O\nziJ5U5Ohrfbx5O9UPkEqI6I15Z+4R1WIF106WzCgiGMDYustseLEk0JhNsczw6jk\nm3alAGh9KPSqY+ABKuCVUTQ2IwKBgQC8/+Mj4mg1yKe0PXy0WyTsLTFxPVL3HrVm\nho5a4dXeCKfJIbcrVIlRrJ+N9Db4N3EUDjZvMzHucIpTAq1confVCNnYJ8QU6rzF\npZfc+n3QWTLZizieMie1uOLEx0LP75LYc+zsdPgLuddSfU47Gw3idJfxm1T3pQnp\nelWl3bWlkQKBgHu1Xfhf5LBZFLOWRbZpcAPfJvw5PoRe24kDde7ZTwKmiR8QSb7z\nLmcDlDEa2sxklQ1yEk9AGDwrxStxQznRRfw1+BxMHpZQkGfOfRI+Fbfc8OWxTIPh\nt9PrGhKHqy5P+x2fQLn35QHYEmzWBORZaTvMQQRs6Ji+Ld3Fzvk0tfSNAoGBAK5F\njR3zkH+3a9vormpneJ5F9cci8rNnH4FQJUdr4haACKaPbiSIKK6k6+KrA1zRUnVZ\nvZu/qxTftMxiNZSrQq+vH6AO2uEmqbXdwTBD0WsiNJ8fnq9QNAl+V6t2yQaPM+pe\nymImYOn/DKrFXDNn+N+M/uYLgsdu6Lre0MbGrs3hAoGAL2l02M7pHZQqOr+4W1e1\nXbkQhy7uoj1M6zyPFEKx6AgvTN9yFwwrtMe6NZ0WKhrsSH/fpGz7wQRkllgVRits\nEIPyVlVNdMsmRZC8B02DRzjTVWnG5ImxK5hKAV3t+reb020RxaItgb+IudECtttt\nAjJfuUENVzUprezaMZcwSEo=\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-hdspu@flaskfevrier23.iam.gserviceaccount.com",
-  "client_id": "114805183182714813731",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-hdspu%40flaskfevrier23.iam.gserviceaccount.com"
-}
-
-cred = credentials.Certificate(key)
-firebase_admin.initialize_app(cred)
-db = firestore.client()
+from DB_API import *
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"
 
 app.register_blueprint(MyLogin, url_prefix="/")
+app.register_blueprint(Myposts, url_prefix="/")
+app.register_blueprint(MyErrors)
 
 @app.route("/")
 def index():
     uid = session.get("uid", "")
-    return render_template("index.html.j2", uid=uid)
+    return render_template("index.html.j2", uid=uid), 200
 
 @app.route("/account")
 def account():
@@ -52,39 +34,6 @@ def secure():
 def form_example():
     form = ExampleForms(request.form)
     return render_template("forms/forms_without_macro.html.j2", form=form)
-
-@app.route("/users")
-def getAllUsersFromDb():
-    users = db.collection(u"Users").stream()
-    for user in users:
-        print(user.id)
-        print(user.to_dict())
-    return ""
-
-@app.route("/users/<id>")
-def getUserFromDb(id):
-    user = db.collection(u"Users").document(id).get()
-    if user.exists:
-        return jsonify(user.to_dict())
-    return f"No user with id {id}"
-
-@app.route("/users/where")
-def whereUsers():
-    users = db.collection(u"Users").where(u"pwd", u"==", 123).stream()
-    ret = {}
-    for user in users:
-        print(user.to_dict())
-        ret[user.id] = user.to_dict()
-    return jsonify(ret)
-
-@app.route("/users/delete/<id>")
-def deleteUsers(id):
-    users = db.collection(u"Users").document(id).delete()
-    return "user deleted"
-
-@app.errorhandler(404)
-def not_found(e):
-  return "<h1>Vous etes perdus</h1><p><a href='"+url_for('index')+"'>retourner sur l'index</a></p>'"
 
 if __name__ == '__main__':
     app.run(debug=True)
